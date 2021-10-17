@@ -1,0 +1,31 @@
+name: GitHub Actions Demo
+on: [push]
+jobs:
+  Environment-Variables:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Display environment variables
+        - run "CI: $CI"
+        - run "GITHUB_WORKFLOW: $GITHUB_WORKFLOW"
+        - run "GITHUB_RUN_ID: $GITHUB_RUN_ID"
+        - run "GITHUB_RUN_NUMBER: $GITHUB_RUN_NUMBER"
+        - run "GITHUB_JOB: $GITHUB_JOB"
+        - run "GITHUB_ACTION: $GITHUB_ACTION"
+        - run "GITHUB_ACTION_PATH: $GITHUB_ACTION_PATH"
+        - run "GITHUB_ACTIONS: $GITHUB_ACTIONS"
+        - run "GITHUB_ACTOR: $GITHUB_ACTOR"
+        - run "GITHUB_REPOSITORY: $GITHUB_REPOSITORY"
+        - run "GITHUB_EVENT_NAME: $GITHUB_EVENT_NAME"
+        - run "GITHUB_EVENT_PATH: $GITHUB_EVENT_PATH"
+        - run "GITHUB_WORKSPACE: $GITHUB_WORKSPACE"
+        - run "GITHUB_SHA: $GITHUB_SHA"
+        - run "GITHUB_REF: $GITHUB_REF"
+        - run "GITHUB_HEAD_REF: $GITHUB_HEAD_REF"
+        - run "GITHUB_BASE_REF: $GITHUB_BASE_REF"
+        - run "GITHUB_SERVER_URL: $GITHUB_SERVER_URL"
+        - run "GITHUB_API_URL: $GITHUB_API_URL"
+        - run "GITHUB_GRAPHQL_URL: $GITHUB_GRAPHQL_URL"
+        - run "RUNNER_NAME: $RUNNER_NAME"
+        - run "RUNNER_OS: $RUNNER_OS"
+        - run "RUNNER_TEMP: $RUNNER_TEMP"
+        - run "RUNNER_TOOL_CACHE: $RUNNER_TOOL_CACHE"
