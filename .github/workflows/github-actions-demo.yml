@@ -4,27 +4,27 @@ jobs:
   Environment-Variables:
     runs-on: ubuntu-latest
     steps:
-      - run: echo "CI is $CI"
-      - run: echo "GITHUB_WORKFLOW is $GITHUB_WORKFLOW"
-      - run: echo "GITHUB_RUN_ID is $GITHUB_RUN_ID"
-      - run: echo "GITHUB_RUN_NUMBER is $GITHUB_RUN_NUMBER"
-      - run: echo "GITHUB_JOB is $GITHUB_JOB"
-      - run: echo "GITHUB_ACTION is $GITHUB_ACTION"
-      - run: echo "GITHUB_ACTION_PATH is $GITHUB_ACTION_PATH"
-      - run: echo "GITHUB_ACTIONS is $GITHUB_ACTIONS"
-      - run: echo "GITHUB_ACTOR is $GITHUB_ACTOR"
-      - run: echo "GITHUB_REPOSITORY is $GITHUB_REPOSITORY"
-      - run: echo "GITHUB_EVENT_NAME is $GITHUB_EVENT_NAME"
-      - run: echo "GITHUB_EVENT_PATH is $GITHUB_EVENT_PATH"
-      - run: echo "GITHUB_WORKSPACE is $GITHUB_WORKSPACE"
-      - run: echo "GITHUB_SHA is $GITHUB_SHA"
-      - run: echo "GITHUB_REF is $GITHUB_REF"
-      - run: echo "GITHUB_HEAD_REF is $GITHUB_HEAD_REF"
-      - run: echo "GITHUB_BASE_REF is $GITHUB_BASE_REF"
-      - run: echo "GITHUB_SERVER_URL is $GITHUB_SERVER_URL"
-      - run: echo "GITHUB_API_URL is $GITHUB_API_URL"
-      - run: echo "GITHUB_GRAPHQL_URL is $GITHUB_GRAPHQL_URL"
-      - run: echo "RUNNER_NAME is $RUNNER_NAME"
-      - run: echo "RUNNER_OS is $RUNNER_OS"
-      - run: echo "RUNNER_TEMP is $RUNNER_TEMP"
-      - run: echo "RUNNER_TOOL_CACHE is $RUNNER_TOOL_CACHE"
+      - run: echo $CI
+      - run: echo $GITHUB_WORKFLOW
+      - run: echo $GITHUB_RUN_ID
+      - run: echo $GITHUB_RUN_NUMBER
+      - run: echo $GITHUB_JOB
+      - run: echo $GITHUB_ACTION
+      - run: echo $GITHUB_ACTION_PATH
+      - run: echo $GITHUB_ACTIONS
+      - run: echo $GITHUB_ACTOR
+      - run: echo $GITHUB_REPOSITORY
+      - run: echo $GITHUB_EVENT_NAME
+      - run: echo $GITHUB_EVENT_PATH
+      - run: echo $GITHUB_WORKSPACE
+      - run: echo $GITHUB_SHA
+      - run: echo $GITHUB_REF
+      - run: echo $GITHUB_HEAD_REF
+      - run: echo $GITHUB_BASE_REF
+      - run: echo $GITHUB_SERVER_URL
+      - run: echo $GITHUB_API_URL
+      - run: echo $GITHUB_GRAPHQL_URL
+      - run: echo $RUNNER_NAME
+      - run: echo $RUNNER_OS
+      - run: echo $RUNNER_TEMP
+      - run: echo $RUNNER_TOOL_CACHE
