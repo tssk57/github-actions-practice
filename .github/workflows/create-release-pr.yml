@@ -1,5 +1,5 @@
 name: Create a release pull-request
-on:workflow_dispatch
+on: workflow_dispatch
 
 jobs:
   release_pull_request:
