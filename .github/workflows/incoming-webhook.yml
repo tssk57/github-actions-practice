@@ -16,7 +16,7 @@ jobs:
         with:
           payload: |
             {
-              "text": "Slackから通知できるかの確認",
+              "text": "Slackから通知できるかの確認"
             }
         env:
           SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
