@@ -1,0 +1,25 @@
+name: Slack Incoming Webhooks
+on:
+  push
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      # Check out theis repo
+      - uses: actions/checkout@v2
+
+      # Start a Slack workflow using a webhook trigger
+      # https://github.com/slackapi/slack-github-action
+      - name: Send GitHub Action trigger data to Slack workflow
+        id: slack
+        uses: slackapi/slack-github-action@v1.16.0
+        with:
+          payload: |
+            {
+              "text": "Slackから通知できるかの確認",
+            }
+        env:
+          SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_INCOMING_WEBHOOK_URL }}
+
+
