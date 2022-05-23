@@ -17,7 +17,8 @@ jobs:
         with:
           payload: |
             {
-              "text": "Slackから通知できるかの確認"
+              "text": "本日以下の内容がリリースされました:tada:\n\n```${{ steps.get_release_note.outputs.body }}```\n\n対応ありがとうございました:clap:\n詳細はこちら: ${{ github.event.release.html_url }}",
+              "unfurl_links": false
             }
         env:
           SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
