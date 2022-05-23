@@ -22,5 +22,23 @@ jobs:
         env:
           SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_INCOMING_WEBHOOK_URL }}
-
+      - name: echo release note
+        run: |
+          echo "- github.event.release --------------------------"
+          echo ${{ github.event.release }}
+          echo "- github.event.release.html_url --------------------------"
+          echo "${{ github.event.release.html_url }}"
+          echo "- github.event.release.name --------------------------"
+          echo "${{ github.event.release.name }}"
+          echo "- github.event.release.tag_name --------------------------"
+          echo "${{ github.event.release.tag_name }}"
+          echo "- github.event.release.body --------------------------"
+          echo '${{ github.event.release.body }}'
+          echo "---------------------------"
+          release_body='${{ github.event.release.body }}'
+          release_body=${release_body//$'\r\n'/\\n}
+          release_body=${release_body//$'\n'/\\n}
+          echo "${release_body}"
+          echo "---------------------------"
+          echo "---------------------------"
 
