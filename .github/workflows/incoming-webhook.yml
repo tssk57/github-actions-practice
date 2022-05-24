@@ -11,7 +11,7 @@ jobs:
       name: echo release note
       run: |
         # 改行コードをエスケープする
-        release_body='${{ github.event.release.body }}'
+        release_body="${{ github.event.release.body }}"
         release_body=${release_body//$'\r\n'/\\n}
         release_body=${release_body//$'\n'/\\n}
         echo "::set-output name=body::$release_body"
