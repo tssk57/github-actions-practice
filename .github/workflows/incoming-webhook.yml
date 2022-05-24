@@ -1,7 +1,7 @@
 name: Slack Incoming Webhooks
 on:
   release:
-    types: [edited]
+    types: [published]
 jobs:
   build:
     runs-on: ubuntu-latest
