@@ -1,0 +1,13 @@
+on: workflow_dispatch
+env:
+  NODE_VERSION: 18.14.2
+  NPM_VERSION: 9.5.0
+jobs:
+  install-npm:
+    name: install npm
+    runs-on: ubuntu-22.04
+
+    steps:
+      - name: Use npm ${{ env.NPM_VERSION }}
+        run: |
+          npm i -g "npm@$( env.NPM_VERSION )"
