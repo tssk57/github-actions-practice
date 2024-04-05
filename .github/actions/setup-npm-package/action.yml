@@ -1,5 +1,9 @@
 name: 'setup-npm-package'
 description: 'npm package setup'
+inputs:
+  project_path:
+    required: false
+    default: frontend
 runs:
   using: 'composite'
   steps:
@@ -29,9 +33,5 @@ runs:
 
     - name: Install dependencies
       shell: bash
-      run: ls
-
-    - name: Install dependencies
-      shell: bash
-      run: ls ..
-      # run: pnpm install
+      # 外側の working-directory が適用されないので cd で移動する
+      run: cd ${{inputs.project_path}} && pnpm install

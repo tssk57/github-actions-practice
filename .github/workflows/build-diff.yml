@@ -1,6 +1,11 @@
 name: build-diff
 on:
-  - push
+  - pull_request
+
+env:
+  FRONTEND_PROJECT_PATH: frontend
+  CURRENT_BUILD_NAME: ${{ github.sha }}-current
+  SOURCE_BUILD_NAME: ${{ github.sha }}-source
 
 jobs:
   current-build: # マージ元のブランチのビルド
@@ -8,69 +13,83 @@ jobs:
     timeout-minutes: 5
     defaults:
       run:
-        working-directory: frontend
+        working-directory: ${{ env.FRONTEND_PROJECT_PATH }}
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: ./.github/actions/setup-npm-package
+        with:
+          project_path: ${{ env.FRONTEND_PROJECT_PATH }}
       - name: build current
         run: |
           pnpm build
       - name: Upload output file
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
-          name: ${{ github.sha }}-current
-          path: out
+          # アップロードする artifact の名前
+          name: ${{ env.CURRENT_BUILD_NAME }}
+          # アップロードするファイル、ディレクトリ、ワイルドカードパターン
+          path: frontend/dist
+          # アーティファクトが期限切れになるまでの日数
+          retention-days: 3
 
-  # source-build: # マージ先のブランチのビルド
-  #   runs-on: ubuntu-latest
-  #   timeout-minutes: 5
+  source-build: # マージ先のブランチのビルド
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    defaults:
+      run:
+        working-directory: ${{ env.FRONTEND_PROJECT_PATH }}
 
-  #   steps:
-  #     - uses: actions/checkout@v3
-  #       with:
-  #         fetch-depth: '0'
-  #     - name: switch to source branch
-  #       run: git checkout $(git show-branch -a | grep '*' | grep -v "$(git rev-parse --abbrev-ref HEAD)" | head -1 | awk -F'[]~^[]' '{print $2}')
-  #     - uses: ./.github/actions/yarn-prepare
-  #     - name: yarn build source
-  #       run: |
-  #         NODE_ENV=production yarn build
-  #     - name: Upload output file
-  #       uses: actions/upload-artifact@v3
-  #       with:
-  #         name: ${{ github.sha }}-source
-  #         path: out
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # デフォルトでは、ワークフローのトリガーとなった ref/SHA に対して、単一のコミットのみがフェッチされる
+          # すべてのブランチとタグのすべての履歴をフェッチするには、fetch-depth: 0を設定
+          fetch-depth: '0'
+      # TODO: develop に setup-npm-packag が入ってから順番を入れ替える
+      - uses: ./.github/actions/setup-npm-package
+      - name: switch to source branch
+        run: git checkout ${{ github.base_ref }}
+      # - uses: ./.github/actions/setup-npm-package
+      - name: build source
+        run: |
+          pnpm build
+      - name: Upload output file
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ env.SOURCE_BUILD_NAME }}
+          path: frontend/dist
+          retention-days: 3
+      # TODO: develop に setup-npm-packag が入ったら不要
+      - name: switch to source branch
+        run: git checkout ${{ github.head_ref }}
 
-  # diff:
-  #   runs-on: ubuntu-latest
-  #   timeout-minutes: 5
+  diff:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
 
-  #   needs:
-  #     - current-build
-  #     - source-build
-  #   steps:
-  #     - uses: actions/checkout@v3
-  #       with:
-  #         fetch-depth: '0'
-  #     - name: download current export file
-  #       uses: actions/download-artifact@v3
-  #       with:
-  #         name: ${{ github.sha }}-current
-  #         path: out-current
-  #     - name: download source export file
-  #       uses: actions/download-artifact@v3
-  #       with:
-  #         name: ${{ github.sha }}-source
-  #         path: out-source
-  #     - name: compress current file
-  #       run: tar -cf current.tar out-current/
-  #     - name: compress source file
-  #       run: tar -cf source.tar out-source/
-  #     - name: compare build
-  #       run: |
-  #         if [ $(sha256sum current.tar | awk  '{print $1}') = $(sha256sum source.tar | awk  '{print $1}') ]; then
-  #           exit 0;
-  #         else
-  #           exit 1;
-  #         fi
+    needs:
+      - current-build
+      - source-build
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: '0'
+      - name: download current export file
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ env.CURRENT_BUILD_NAME }}
+          path: current-dist
+      - name: download source export file
+        uses: actions/download-artifact@v4
+        with:
+          # ダウンロードするアーティファクトの名前
+          name: ${{ env.SOURCE_BUILD_NAME }}
+          path: source-dist
+      # - name: compress current file
+      #   run: tar -cf current.tar current-dist/
+      # - name: compress source file
+      #   run: tar -cf source.tar source-dist/
+      # scripts/compare-build.js を実行
+      - name: compare build
+        run: node scripts/compare-build.js
