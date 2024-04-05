@@ -1,0 +1,76 @@
+name: build-diff
+on:
+  - push
+
+jobs:
+  current-build: # マージ元のブランチのビルド
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    defaults:
+      run:
+        working-directory: frontend
+
+    steps:
+      - uses: actions/checkout@v3
+      - uses: ./.github/actions/setup-npm-package
+      - name: build current
+        run: |
+          pnpm build
+      - name: Upload output file
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ github.sha }}-current
+          path: out
+
+  # source-build: # マージ先のブランチのビルド
+  #   runs-on: ubuntu-latest
+  #   timeout-minutes: 5
+
+  #   steps:
+  #     - uses: actions/checkout@v3
+  #       with:
+  #         fetch-depth: '0'
+  #     - name: switch to source branch
+  #       run: git checkout $(git show-branch -a | grep '*' | grep -v "$(git rev-parse --abbrev-ref HEAD)" | head -1 | awk -F'[]~^[]' '{print $2}')
+  #     - uses: ./.github/actions/yarn-prepare
+  #     - name: yarn build source
+  #       run: |
+  #         NODE_ENV=production yarn build
+  #     - name: Upload output file
+  #       uses: actions/upload-artifact@v3
+  #       with:
+  #         name: ${{ github.sha }}-source
+  #         path: out
+
+  # diff:
+  #   runs-on: ubuntu-latest
+  #   timeout-minutes: 5
+
+  #   needs:
+  #     - current-build
+  #     - source-build
+  #   steps:
+  #     - uses: actions/checkout@v3
+  #       with:
+  #         fetch-depth: '0'
+  #     - name: download current export file
+  #       uses: actions/download-artifact@v3
+  #       with:
+  #         name: ${{ github.sha }}-current
+  #         path: out-current
+  #     - name: download source export file
+  #       uses: actions/download-artifact@v3
+  #       with:
+  #         name: ${{ github.sha }}-source
+  #         path: out-source
+  #     - name: compress current file
+  #       run: tar -cf current.tar out-current/
+  #     - name: compress source file
+  #       run: tar -cf source.tar out-source/
+  #     - name: compare build
+  #       run: |
+  #         if [ $(sha256sum current.tar | awk  '{print $1}') = $(sha256sum source.tar | awk  '{print $1}') ]; then
+  #           exit 0;
+  #         else
+  #           exit 1;
+  #         fi
