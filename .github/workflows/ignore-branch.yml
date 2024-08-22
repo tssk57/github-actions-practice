@@ -1,0 +1,15 @@
+name: Ignores main workflow
+
+on:
+  pull_request:
+    types: [opened, ready_for_review]
+    branches-ignore:
+      - main
+
+jobs:
+  print-env:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Print env
+        run: |
+          echo "GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}"
