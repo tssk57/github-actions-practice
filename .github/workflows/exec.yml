@@ -1,0 +1,25 @@
+name: exec
+
+on:
+  workflow_dispatch:
+    inputs:
+      runner:
+        description: 'Choose the runner'
+        type: choice
+        options:
+        - ubuntu-latest
+        - windows-latest
+        - macos-latest
+        required: true
+        default: 'ubuntu-latest'
+      command:
+        description: 'Command to run (including arguments)'
+        required: true
+
+jobs:
+  exec:
+    runs-on: ${{ github.event.inputs.runner }}
+    steps:
+      # - uses: docker/setup-buildx-action@v3
+      - run: ${{ github.event.inputs.command }}
+        shell: bash
